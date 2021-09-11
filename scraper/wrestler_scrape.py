@@ -6,6 +6,7 @@ from bs4 import SoupStrainer
 from requests.exceptions import RequestException
 
 def scrape_wrestler_data():
+    # TODO: generalize the date to pull a variable date
     data_url = "http://sumodb.sumogames.de/Banzuke.aspx?b=202109&heya=-1&shusshin=-1&w=on&spr=on&c=on"
     # Parse only tables with wrestler data
     onlytabl = SoupStrainer('table', class_='banzuke')
