@@ -1,3 +1,4 @@
+import pandas as pd
 import requests as req
 import sys
 from bs4 import BeautifulSoup as BS
@@ -10,7 +11,6 @@ def scrape_wrestler_data():
     onlytabl = SoupStrainer('table', class_='banzuke')
 
     resp = req.get(data_url)
-
     try:
         resp.raise_for_status()
     except RequestException as e:
@@ -19,9 +19,20 @@ def scrape_wrestler_data():
         soup = BS(resp.text, 'lxml', parse_only=onlytabl)
         #print(soup('table')[0].prettify())
         top_flight = soup('table')[0].find('tbody')('tr')
-        print(top_flight)
-        
-        
+        #print(top_flight)
+        cleaned_rows = [
+            {
+              'Wrestler Rank': row('td')[0].string,
+              'Rikishi': row('td')[1].string,
+              'Height': ' '.join(row('td')[2].string.split(' ')[:2]),
+              'Weight': ' '.join(row('td')[2].string.split(' ')[2:]),
+              'Previous Rank': row('td')[3].string,
+              'Tournament Results': row('td')[4].string
+            }
+        for row in top_flight]
+        #print(cleaned_rows)
+        prepped_data = pd.DataFrame(cleaned_rows)
+        print(prepped_data)
 
 
 if __name__ == '__main__':
