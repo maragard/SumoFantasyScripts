@@ -28,12 +28,14 @@ def scrape_wrestler_data():
               'Height': ' '.join(row('td')[2].string.split(' ')[:2]),
               'Weight': ' '.join(row('td')[2].string.split(' ')[2:]),
               'Previous Rank': row('td')[3].string,
-              'Tournament Results': row('td')[4].string
+              #'Tournament Results': row('td')[4].string
             }
         for row in top_flight]
         #print(cleaned_rows)
         prepped_data = pd.DataFrame(cleaned_rows)
-        print(prepped_data)
+        #print(prepped_data)
+
+        prepped_data.to_csv("./roster.csv", index=False)
 
 
 if __name__ == '__main__':
