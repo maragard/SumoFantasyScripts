@@ -7,7 +7,7 @@ from requests.exceptions import RequestException
 
 def scrape_wrestler_data():
     # TODO: generalize the date to pull a variable date
-    data_url = "http://sumodb.sumogames.de/Banzuke.aspx?b=202109&heya=-1&shusshin=-1&w=on&spr=on&c=on"
+    data_url = "http://sumodb.sumogames.de/Banzuke.aspx?b=202111&heya=-1&shusshin=-1&w=on&sps=on&spr=on&c=on"
     # Parse only tables with wrestler data
     onlytabl = SoupStrainer('table', class_='banzuke')
 
@@ -20,17 +20,22 @@ def scrape_wrestler_data():
         soup = BS(resp.text, 'lxml', parse_only=onlytabl)
         #print(soup('table')[0].prettify())
         top_flight = soup('table')[0].find('tbody')('tr')
-        #print(top_flight)
-        cleaned_rows = [
-            {
-              'Wrestler Rank': row('td')[0].string,
-              'Rikishi': row('td')[1].string,
-              'Height': ' '.join(row('td')[2].string.split(' ')[:2]),
-              'Weight': ' '.join(row('td')[2].string.split(' ')[2:]),
-              'Previous Rank': row('td')[3].string,
-              #'Tournament Results': row('td')[4].string
-            }
-        for row in top_flight]
+        print(top_flight)
+        # cleaned_rows = [
+            # {
+              # 'Wrestler Rank': row('td')[0].string.encode('ascii', 'ignore').decode().strip(),
+              # 'Rikishi': row('td')[1].string,
+              # 'Height': ' '.join(row('td')[2].string.split(' ')[:2]),
+              # 'Weight': ' '.join(row('td')[2].string.split(' ')[2:]),
+              # 'Previous Rank': row('td')[3].string,
+              # 'Prev. Tournament': row('td')[4].string.encode('ascii', 'ignore').decode().strip()
+            # }
+        # for row in top_flight]
+        for row in top_flight:
+            
+            
+            # data_template = {col: "" for col in ["Wrestler Rank", "Rikishi", "Height", "Weight", "Previous Rank", "Prev. Tournament"]}
+            
         #print(cleaned_rows)
         prepped_data = pd.DataFrame(cleaned_rows)
         #print(prepped_data)
